@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Device;
+use App\Models\Plant;
+use App\Models\DeviceUser;
+use App\Models\PlantUser;
 
 
 #[Fillable(['name', 'email', 'password'])]
@@ -30,5 +35,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function devices(): BelongsToMany
+    {
+        return $this->belongsToMany(Device::class, 'device_user')
+            ->using(DeviceUser::class)
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    public function plants(): BelongsToMany
+    {
+        return $this->belongsToMany(Plant::class, 'plant_user')
+            ->using(PlantUser::class)
+            ->withPivot('role')
+            ->withTimestamps();
     }
 }
