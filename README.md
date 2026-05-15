@@ -1,4 +1,5 @@
 # Planco Cloud (Backend) 
+<img width="200" height="200" alt="image" src="https://github.com/user-attachments/assets/20afdb34-3846-465b-899d-d5a00fcc7e1d" />
 
 | Metadata | Information |
 | --- | --- |
