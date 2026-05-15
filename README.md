@@ -17,7 +17,11 @@ This repository contains the backend service for the Planco platform implemented
 
 ## Description
 
-Planco Cloud Backend is a PHP (Laravel) application. It handles user accounts, authentication, authorization, database persistence, and serves API routes used by client applications.
+Planco Cloud Backend is a Laracel-based REST API built with modern web frameworks and 
+PostgreSQL database. It manages user accounts, authentication, authorization, and 
+provides machine learning functionalities for predictive analytics and intelligent features. 
+The backend is designed to be scalable, maintainable, and secure, serving multiple client 
+applications (web, mobile, etc.).
 
 ### Key Components
 
