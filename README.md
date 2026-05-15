@@ -6,7 +6,7 @@
 | **Organization** | Planco |
 | **Project Status** | 🔴 Alpha |
 | **Primary Owner** | @TobiasClausen |
-| **Primary Tech Stack** | Python, Postgres |
+| **Primary Tech Stack** | Laravel, Postgres |
 | **CI/CD Status** | NOT SETUP |
 
 ---
@@ -20,7 +20,7 @@ handles business logic, data persistence, and intelligent features.
 
 ## Description
 
-Planco Cloud Backend is a Python-based REST API built with modern web frameworks and 
+Planco Cloud Backend is a Laracel-based REST API built with modern web frameworks and 
 PostgreSQL database. It manages user accounts, authentication, authorization, and 
 provides machine learning functionalities for predictive analytics and intelligent features. 
 The backend is designed to be scalable, maintainable, and secure, serving multiple client 
@@ -34,17 +34,6 @@ applications (web, mobile, etc.).
 * **Machine Learning:** ML models for predictions, analytics, and intelligent features
 * **API Layer:** RESTful endpoints for client applications
 * **Background Jobs:** Async task processing and scheduled jobs
-
-## Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-* Python 3.9+ 
-* PostgreSQL 12+
-* pip (Python package manager)
-* virtualenv or conda
-* Git
-* Access to Planco's internal infrastructure
 
 ## Installation & Setup
 
