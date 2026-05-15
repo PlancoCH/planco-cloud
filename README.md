@@ -13,10 +13,7 @@
 
 ## Purpose
 
-This repository contains the main backend service for the Planco platform. It provides core 
-API endpoints, user management, authentication, database operations, and machine learning 
-capabilities. This backend serves as the central hub for all Planco applications and 
-handles business logic, data persistence, and intelligent features.
+This repository contains the backend service for the Planco platform implemented in Laravel. It provides API endpoints, user management, authentication, database migrations, and frontend asset tooling via Vite.
 
 ## Description
 
@@ -28,95 +25,113 @@ applications (web, mobile, etc.).
 
 ### Key Components
 
-* **User Management:** Registration, authentication, profiles, roles, and permissions
-* **Authentication & Authorization:** Token-based auth, session management, RBAC
-* **Database:** PostgreSQL with ORM layer for data persistence
-* **Machine Learning:** ML models for predictions, analytics, and intelligent features
-* **API Layer:** RESTful endpoints for client applications
-* **Background Jobs:** Async task processing and scheduled jobs
+- **User Management:** Registration, authentication, profiles, roles, and permissions
+- **Authentication & Authorization:** Token-based auth (Sanctum), session management, RBAC
+- **Database:** MySQL/Postgres with Eloquent ORM
+- **API Layer:** RESTful endpoints for client applications
+- **Frontend Assets:** Vite (Node) for building JS/CSS
+- **Background Jobs:** Laravel queues for async tasks
+
+## Prerequisites
+
+Before you begin, ensure you have these installed:
+
+- PHP 8.1+ with required extensions
+- Composer
+- Node.js 16+ and npm (or pnpm/yarn)
+- A supported database: MySQL, MariaDB, or PostgreSQL
+- Git
 
 ## Installation & Setup
-
-Step-by-step instructions to get the development environment running.
 
 ```bash
 # Clone the repository
 git clone git@github.com:PlancoCH/planco-cloud.git
-
-# Navigate to project directory
 cd planco-cloud
 
-# Create virtual environment
-python -m venv venv
+# Install PHP dependencies
+composer install
 
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Set up environment variables
+# Copy environment file and generate app key
 cp .env.example .env
+php artisan key:generate
 
-# Initialize database
-python manage.py db upgrade
+# Configure database settings in .env
 
-# Load initial data (optional)
-python manage.py seed
+# Run database migrations
+php artisan migrate
 
+# (Optional) Seed the database
+php artisan db:seed
+
+# Install frontend dependencies and build assets (for local dev)
+npm install
+npm run dev
+
+# Start the development server
+php artisan serve --host=127.0.0.1 --port=8000
 ```
 
-## Configuration
+Access the application at http://127.0.0.1:8000
 
-Create a `.env` file in the project root with the following variables:
+## Environment
+
+Edit `.env` to configure the database and other settings. Common vars:
 
 ```
-DATABASE_URL=postgresql://user:password@localhost:5432/planco
-SECRET_KEY=your-secret-key-here
-FLASK_ENV=development
-DEBUG=True
-ML_MODEL_PATH=./models
+APP_NAME=Planco
+APP_ENV=local
+APP_KEY=base64:...
+APP_DEBUG=true
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=planco
+DB_USERNAME=root
+DB_PASSWORD=
+
+CACHE_DRIVER=file
+QUEUE_CONNECTION=database
+SESSION_DRIVER=file
 ```
 
-## Usage
+## Running Tests
 
-Examples of how to run the project locally or interact with the API.
+Run PHP unit tests with PHPUnit:
 
 ```bash
-# Start development server
-python -m flask run
-
-# Or with Flask CLI
-flask run
-
-# Access API at http://localhost:5000
-
-# Run background workers
-celery -A app.celery worker
-
-# Run scheduled tasks
-celery -A app.celery beat
-
+./vendor/bin/phpunit
 ```
 
-## Testing
+## Common Artisan Commands
 
-How to run the automated tests for this system.
+- Clear config cache: `php artisan config:clear`
+- Clear route cache: `php artisan route:clear`
+- Run migrations: `php artisan migrate`
+- Fresh migrate + seed: `php artisan migrate:fresh --seed`
+
+## Frontend (Vite)
+
+Development:
 
 ```bash
-# Testing is not setup yet
+npm run dev
+```
 
+Build for production:
+
+```bash
+npm run build
 ```
 
 ## Support & Contact
 
-If you have questions regarding this repository or encounter issues, please reach out to the maintainers:
+For questions or issues, contact the maintainers:
 
-* **Primary Contact:** [Tobias Clausen] (@TobiasClausen)
-* **Discord Channel:** `#planco`
+- **Primary Contact:** Tobias Clausen (@TobiasClausen)
+- **Team Chat:** #planco
 
 ---
 
