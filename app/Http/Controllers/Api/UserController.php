@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\SignupRequest;
 use App\Http\Requests\Api\Auth\UpdateUserRequest;
@@ -21,6 +22,8 @@ class UserController extends Controller
             'email' => $request->validated('email'),
             'password' => $request->validated('password'),
         ]);
+
+        event(new Registered($user));
 
         $token = $user->createToken('api')->plainTextToken;
 
@@ -41,6 +44,12 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'The provided credentials are incorrect.',
             ], 422);
+        }
+
+        if (! $user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Your email address is not verified.',
+            ], 403);
         }
 
         $token = $user->createToken('api')->plainTextToken;
