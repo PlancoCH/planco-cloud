@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Auth\Access\AuthorizationException;
 
 class Device extends Model
 {
@@ -15,6 +13,7 @@ class Device extends Model
         'name',
         'notes',
         'api_key',
+        'mapping_key',
         'polling_rate',
         'wifi_rssi',
         'led_enabled',
@@ -38,9 +37,21 @@ class Device extends Model
     {
         if ($value === null) {
             $this->attributes['api_key'] = null;
+
             return;
         }
 
         $this->attributes['api_key'] = hash('sha256', $value);
+    }
+
+    public function setMappingKeyAttribute($value): void
+    {
+        if ($value === null) {
+            $this->attributes['mapping_key'] = null;
+
+            return;
+        }
+
+        $this->attributes['mapping_key'] = hash('sha256', $value);
     }
 }
