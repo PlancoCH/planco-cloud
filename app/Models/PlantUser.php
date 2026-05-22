@@ -15,5 +15,6 @@ class PlantUser extends Pivot
     ];
 
     public $incrementing = true;
+
     public $timestamps = true;
 }

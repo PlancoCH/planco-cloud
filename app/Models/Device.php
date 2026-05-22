@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Auth\Access\AuthorizationException;
 
 class Device extends Model
 {
@@ -39,6 +37,7 @@ class Device extends Model
     {
         if ($value === null) {
             $this->attributes['api_key'] = null;
+
             return;
         }
 
@@ -49,6 +48,7 @@ class Device extends Model
     {
         if ($value === null) {
             $this->attributes['mapping_key'] = null;
+
             return;
         }
 
