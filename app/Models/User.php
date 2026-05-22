@@ -11,9 +11,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Device;
 use App\Models\Plant;
-use App\Models\DeviceUser;
 use App\Models\PlantUser;
 
 
@@ -37,12 +37,9 @@ class User extends Authenticatable
         ];
     }
 
-    public function devices(): BelongsToMany
+    public function devices(): HasMany
     {
-        return $this->belongsToMany(Device::class, 'device_user')
-            ->using(DeviceUser::class)
-            ->withPivot('role')
-            ->withTimestamps();
+        return $this->hasMany(Device::class);
     }
 
     public function plants(): BelongsToMany
