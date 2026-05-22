@@ -25,12 +25,9 @@ class UserController extends Controller
 
         event(new Registered($user));
 
-        $token = $user->createToken('api')->plainTextToken;
-
         return response()->json([
             'message' => 'User created successfully.',
             'user' => new UserResource($user),
-            'token' => $token,
         ], 201);
     }
 
