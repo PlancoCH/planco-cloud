@@ -46,6 +46,12 @@ class UserController extends Controller
             ], 422);
         }
 
+        if (! $user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Your email address is not verified.',
+            ], 403);
+        }
+
         $token = $user->createToken('api')->plainTextToken;
 
         return response()->json([
