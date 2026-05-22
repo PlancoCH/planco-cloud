@@ -30,4 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/devices/{device}', [DeviceController::class, 'show']);
     Route::put('/devices/{device}', [DeviceController::class, 'update']);
     Route::post('/devices/{device}/unmap', [DeviceController::class, 'unmap']);
+
+    Route::get('/plant-types', [\App\Http\Controllers\PlantTypeController::class, 'index']);
+    Route::get('/plant-types/{plantType}', [\App\Http\Controllers\PlantTypeController::class, 'show']);
+    Route::get('/plant-types/{plantType}/image', [\App\Http\Controllers\PlantTypeController::class, 'image']);
 });
