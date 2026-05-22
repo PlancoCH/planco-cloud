@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VerifyEmailController;
-use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\Api\DeviceController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {

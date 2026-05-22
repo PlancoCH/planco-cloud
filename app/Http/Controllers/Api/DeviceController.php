@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Requests\MapDeviceRequest;
-use App\Http\Requests\UpdateDeviceRequest;
-use App\Http\Resources\DeviceResource;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Device\MapDeviceRequest;
+use App\Http\Requests\Api\Device\UpdateDeviceRequest;
+use App\Http\Resources\Api\DeviceResource;
 use App\Models\Device;
 use Illuminate\Http\Request;
 
