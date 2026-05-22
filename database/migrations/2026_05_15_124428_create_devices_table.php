@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('notes')->nullable();
             $table->char('api_key', 64)->unique(); // NEEDS TO BE HASHED
+            $table->char('mapping_key', 64)->unique(); // NEEDS TO BE HASHED
             $table->integer('polling_rate')->default(60);
             $table->integer('wifi_rssi')->nullable();
             $table->boolean('led_enabled')->default(true);
