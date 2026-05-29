@@ -21,6 +21,7 @@ class PlantResource extends JsonResource
             'nickname' => $this->nickname,
             'notes' => $this->notes,
             'custom_image' => $this->custom_image,
+            'sharing_token' => $this->sharing_token,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'plant_type' => new PlantTypeResource($this->whenLoaded('plantType')),

@@ -17,6 +17,7 @@ class Plant extends Model
         'custom_image',
         'nickname',
         'notes',
+        'sharing_token',
     ];
 
     public function device(): BelongsTo
