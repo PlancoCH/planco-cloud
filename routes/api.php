@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VerifyEmailController;
 use App\Http\Controllers\Api\DeviceController;
 use App\Http\Controllers\Api\PlantTypeController;
+use App\Http\Controllers\Api\PlantController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -35,4 +36,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/plant-types', [PlantTypeController::class, 'index']);
     Route::get('/plant-types/{plantType}', [PlantTypeController::class, 'show']);
     Route::get('/plant-types/{plantType}/image', [PlantTypeController::class, 'image']);
+
+    Route::get('/plants', [PlantController::class, 'index']);
+    Route::post('/plants', [PlantController::class, 'store']);
+    Route::get('/plants/{plant}', [PlantController::class, 'show']);
+    Route::put('/plants/{plant}', [PlantController::class, 'update']);
+    Route::delete('/plants/{plant}', [PlantController::class, 'destroy']);
+
+    Route::post('/plants/{plant}/map', [PlantController::class, 'map']);
+    Route::post('/plants/{plant}/unmap', [PlantController::class, 'unmap']);
+
+    Route::post('/plants/{plant}/share', [PlantController::class, 'share']);
+    Route::delete('/plants/{plant}/share', [PlantController::class, 'revokeShare']);
+    Route::post('/plants/join', [PlantController::class, 'join']);
 });
