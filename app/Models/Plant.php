@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Auth\Access\AuthorizationException;
 
 class Plant extends Model
 {
@@ -17,6 +17,7 @@ class Plant extends Model
         'custom_image',
         'nickname',
         'notes',
+        'sharing_token',
     ];
 
     public function device(): BelongsTo

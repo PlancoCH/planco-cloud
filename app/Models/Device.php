@@ -3,17 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Auth\Access\AuthorizationException;
 
 class Device extends Model
 {
     protected $fillable = [
+        'user_id',
         'name',
         'notes',
         'api_key',
+        'mapping_key',
         'polling_rate',
         'wifi_rssi',
         'led_enabled',
@@ -28,73 +28,30 @@ class Device extends Model
         return $this->hasMany(Plant::class);
     }
 
-    public function users(): BelongsToMany
+    public function user(): BelongsTo
     {
-        return $this->belongsToMany(User::class, 'device_user')
-            ->using(DeviceUser::class)
-            ->withPivot('role')
-            ->withTimestamps();
+        return $this->belongsTo(User::class);
     }
 
     public function setApiKeyAttribute($value): void
     {
         if ($value === null) {
             $this->attributes['api_key'] = null;
+
             return;
         }
 
         $this->attributes['api_key'] = hash('sha256', $value);
     }
 
-    protected static function booted()
+    public function setMappingKeyAttribute($value): void
     {
-        // Prevent non-owner members from updating or deleting devices at model level.
-        static::saving(function (self $device) {
-            if (! $device->exists) {
-                return true; // creating — allow
-            }
+        if ($value === null) {
+            $this->attributes['mapping_key'] = null;
 
-            if (app()->runningInConsole()) {
-                return true; // allow console operations (seeds, artisan)
-            }
+            return;
+        }
 
-            $user = auth()->user();
-            if (! $user) {
-                return true; // no auth context — allow
-            }
-
-            $role = DB::table('device_user')
-                ->where('user_id', $user->id)
-                ->where('device_id', $device->id)
-                ->value('role');
-
-            if ($role === 'member') {
-                throw new AuthorizationException('Members are not allowed to modify devices.');
-            }
-
-            return true;
-        });
-
-        static::deleting(function (self $device) {
-            if (app()->runningInConsole()) {
-                return true;
-            }
-
-            $user = auth()->user();
-            if (! $user) {
-                return true;
-            }
-
-            $role = DB::table('device_user')
-                ->where('user_id', $user->id)
-                ->where('device_id', $device->id)
-                ->value('role');
-
-            if ($role === 'member') {
-                throw new AuthorizationException('Members are not allowed to delete devices.');
-            }
-
-            return true;
-        });
+        $this->attributes['mapping_key'] = hash('sha256', $value);
     }
 }

@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->text('notes')->nullable();
             $table->char('api_key', 64)->unique(); // NEEDS TO BE HASHED
+            $table->char('mapping_key', 64)->unique(); // NEEDS TO BE HASHED
             $table->integer('polling_rate')->default(60);
             $table->integer('wifi_rssi')->nullable();
             $table->boolean('led_enabled')->default(true);
