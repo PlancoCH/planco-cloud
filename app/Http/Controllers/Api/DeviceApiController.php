@@ -12,7 +12,7 @@ class DeviceApiController extends Controller
      */
     public function storeData(StoreDeviceDataRequest $request)
     {
-        $device = $request->get('device');
+        $device = $request->attributes->get('device');
         
         if (!$device) {
              return response()->json(['message' => 'Unauthorized. Device not authenticated.'], 401);
