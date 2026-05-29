@@ -3,8 +3,10 @@
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VerifyEmailController;
 use App\Http\Controllers\Api\DeviceController;
+use App\Http\Controllers\Api\DeviceApiController;
 use App\Http\Controllers\Api\PlantTypeController;
 use App\Http\Controllers\Api\PlantController;
+use App\Http\Middleware\VerifyDeviceApiKey;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -50,3 +52,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/plants/{plant}/share', [PlantController::class, 'revokeShare']);
     Route::post('/plants/join', [PlantController::class, 'join']);
 });
+
+Route::middleware(VerifyDeviceApiKey::class)->prefix('device-api')->group(function () {
+    Route::post('/data', [DeviceApiController::class, 'storeData']);
+    Route::put('/wifi-rssi', [DeviceApiController::class, 'updateWifiRssi']);
+    Route::get('/config', [DeviceApiController::class, 'getConfig']);
+});
+
