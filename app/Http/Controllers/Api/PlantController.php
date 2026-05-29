@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Plant\StorePlantRequest;
 use App\Http\Requests\Api\Plant\UpdatePlantRequest;
+use App\Http\Requests\Api\Plant\MapDeviceToPlantRequest;
 use App\Http\Resources\Api\PlantResource;
 use App\Models\Plant;
 use Illuminate\Http\Request;
@@ -75,5 +76,41 @@ class PlantController extends Controller
         $plant->delete();
 
         return response()->noContent();
+    }
+
+    /**
+     * Map a user's device to a plant.
+     */
+    public function map(MapDeviceToPlantRequest $request, Plant $plant)
+    {
+        if (!$request->user()->plants()->where('plants.id', $plant->id)->exists()) {
+            abort(403, 'Unauthorized access to this plant.');
+        }
+
+        $device = $request->user()->devices()->find($request->device_id);
+
+        if (!$device) {
+            return response()->json(['message' => 'Device not found or not owned by user.'], 404);
+        }
+
+        $plant->update(['device_id' => $device->id]);
+
+        $plant->load(['plantType', 'device']);
+
+        return new PlantResource($plant);
+    }
+
+    /**
+     * Unmap the currently attached device from a plant.
+     */
+    public function unmap(Request $request, Plant $plant)
+    {
+        if (!$request->user()->plants()->where('plants.id', $plant->id)->exists()) {
+            abort(403, 'Unauthorized access to this plant.');
+        }
+
+        $plant->update(['device_id' => null]);
+
+        return response()->json(['message' => 'Device unmapped from plant successfully.']);
     }
 }
