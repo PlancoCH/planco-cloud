@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VerifyEmailController;
 use App\Http\Controllers\Api\DeviceController;
+use App\Http\Controllers\Api\PlantTypeController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -31,7 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/devices/{device}', [DeviceController::class, 'update']);
     Route::post('/devices/{device}/unmap', [DeviceController::class, 'unmap']);
 
-    Route::get('/plant-types', [\App\Http\Controllers\PlantTypeController::class, 'index']);
-    Route::get('/plant-types/{plantType}', [\App\Http\Controllers\PlantTypeController::class, 'show']);
-    Route::get('/plant-types/{plantType}/image', [\App\Http\Controllers\PlantTypeController::class, 'image']);
+    Route::get('/plant-types', [PlantTypeController::class, 'index']);
+    Route::get('/plant-types/{plantType}', [PlantTypeController::class, 'show']);
+    Route::get('/plant-types/{plantType}/image', [PlantTypeController::class, 'image']);
 });
