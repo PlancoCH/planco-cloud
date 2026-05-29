@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/plants/{plant}', [PlantController::class, 'show']);
     Route::put('/plants/{plant}', [PlantController::class, 'update']);
     Route::delete('/plants/{plant}', [PlantController::class, 'destroy']);
+    
     Route::post('/plants/{plant}/map', [PlantController::class, 'map']);
     Route::post('/plants/{plant}/unmap', [PlantController::class, 'unmap']);
 });
