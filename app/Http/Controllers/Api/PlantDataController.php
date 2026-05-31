@@ -32,10 +32,7 @@ class PlantDataController extends Controller
             $query->where('created_at', '<=', $request->input('end_date'));
         }
 
-        // Return paginated results (default 100 per page to handle IoT data density)
-        $perPage = $request->input('per_page', 100);
-        
-        return PlantDataResource::collection($query->paginate($perPage));
+        return PlantDataResource::collection($query->get());
     }
 
     /**
