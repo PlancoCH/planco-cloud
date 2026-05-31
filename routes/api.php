@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\DeviceController;
 use App\Http\Controllers\Api\DeviceApiController;
 use App\Http\Controllers\Api\PlantTypeController;
 use App\Http\Controllers\Api\PlantController;
+use App\Http\Controllers\Api\DailyInsightController;
 use App\Http\Middleware\VerifyDeviceApiKey;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/plants/{plant}/share', [PlantController::class, 'share']);
     Route::delete('/plants/{plant}/share', [PlantController::class, 'revokeShare']);
     Route::post('/plants/join', [PlantController::class, 'join']);
+
+    Route::get('/plants/{plant}/insights', [DailyInsightController::class, 'index']);
+    Route::get('/plants/{plant}/insights/{dailyInsight}', [DailyInsightController::class, 'show']);
+    Route::post('/plants/{plant}/insights/generate', [DailyInsightController::class, 'generate']);
+    Route::patch('/plants/{plant}/insights/{dailyInsight}/read', [DailyInsightController::class, 'markAsRead']);
 });
 
 Route::middleware(VerifyDeviceApiKey::class)->prefix('device-api')->group(function () {
