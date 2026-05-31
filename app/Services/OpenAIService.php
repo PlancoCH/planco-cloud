@@ -24,7 +24,7 @@ class OpenAIService
      * @param string $model         Model to use, defaults to 'gpt-4o' or 'gpt-3.5-turbo'
      * @return string|null          The generated content string from the response
      */
-    public function request(array $systemMessages, array $userMessages, string $model = 'gpt-4-turbo'): ?string
+    public function request(array $systemMessages, array $userMessages, string $model = 'deepseek-v4-flash'): ?string
     {
         $messages = $this->buildMessagesArray($systemMessages, $userMessages);
 
