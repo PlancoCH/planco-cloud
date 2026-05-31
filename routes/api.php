@@ -55,7 +55,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/plants/{plant}/insights', [DailyInsightController::class, 'index']);
     Route::get('/plants/{plant}/insights/{dailyInsight}', [DailyInsightController::class, 'show']);
-    Route::post('/plants/{plant}/insights/generate', [DailyInsightController::class, 'generate']);
     Route::patch('/plants/{plant}/insights/{dailyInsight}/read', [DailyInsightController::class, 'markAsRead']);
 });
 
