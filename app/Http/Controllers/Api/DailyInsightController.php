@@ -5,36 +5,34 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\DailyInsight;
 use App\Models\Plant;
+use App\Http\Resources\DailyInsightResource;
 use App\Services\OpenAIService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class DailyInsightController extends Controller
 {
     /**
      * Display a listing of the daily insights.
      */
-    public function index(Plant $plant): JsonResponse
+    public function index(Plant $plant): AnonymousResourceCollection
     {
         $insights = $plant->insights()->orderBy('created_at', 'desc')->get();
 
-        return response()->json([
-            'data' => $insights
-        ]);
+        return DailyInsightResource::collection($insights);
     }
 
     /**
      * Display the specified daily insight.
      */
-    public function show(Plant $plant, DailyInsight $dailyInsight): JsonResponse
+    public function show(Plant $plant, DailyInsight $dailyInsight): DailyInsightResource
     {
         if ($dailyInsight->plant_id !== $plant->id) {
             abort(404);
         }
 
-        return response()->json([
-            'data' => $dailyInsight
-        ]);
+        return new DailyInsightResource($dailyInsight);
     }
 
     /**
@@ -98,7 +96,7 @@ class DailyInsightController extends Controller
 
         return response()->json([
             'message' => 'Daily insight generated successfully.',
-            'data' => $insight
+            'data' => new DailyInsightResource($insight)
         ], 201);
     }
 
@@ -117,7 +115,7 @@ class DailyInsightController extends Controller
 
         return response()->json([
             'message' => 'Insight marked as read.',
-            'data' => $dailyInsight
+            'data' => new DailyInsightResource($dailyInsight)
         ]);
     }
 }
