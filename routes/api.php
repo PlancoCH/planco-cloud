@@ -1,13 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\DailyInsightController;
+use App\Http\Controllers\Api\DeviceApiController;
+use App\Http\Controllers\Api\DeviceController;
+use App\Http\Controllers\Api\PlantController;
+use App\Http\Controllers\Api\PlantDataController;
+use App\Http\Controllers\Api\PlantTypeController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VerifyEmailController;
-use App\Http\Controllers\Api\DeviceController;
-use App\Http\Controllers\Api\DeviceApiController;
-use App\Http\Controllers\Api\PlantTypeController;
-use App\Http\Controllers\Api\PlantController;
-use App\Http\Controllers\Api\DailyInsightController;
-use App\Http\Controllers\Api\PlantDataController;
 use App\Http\Middleware\VerifyDeviceApiKey;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +27,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])
-    ->middleware(['signed', 'throttle:6,1'])
+    ->middleware(['signed:relative', 'throttle:6,1'])
     ->name('verification.verify');
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -70,4 +70,3 @@ Route::middleware(VerifyDeviceApiKey::class)->prefix('device-api')->group(functi
     Route::put('/wifi-rssi', [DeviceApiController::class, 'updateWifiRssi']);
     Route::get('/config', [DeviceApiController::class, 'getConfig']);
 });
-
