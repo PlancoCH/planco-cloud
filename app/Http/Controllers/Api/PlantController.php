@@ -163,4 +163,32 @@ class PlantController extends Controller
 
         return new PlantResource($plant);
     }
+
+    public function image(Plant $plant)
+    {
+        if ($plant->custom_image) {
+
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mime_type = $finfo->buffer($plant->custom_image);
+
+            if (!$mime_type || $mime_type === 'application/x-empty') {
+                $mime_type = 'image/jpeg';
+            }
+
+            return response($plant->custom_image)->header('Content-Type', $mime_type);
+        }
+
+        if (!$plant->plantType->standard_image) {
+            abort(404, 'No image found for this plant.');
+        }
+
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mime_type = $finfo->buffer($plant->plantType->standard_image);
+
+        if (!$mime_type || $mime_type === 'application/x-empty') {
+            $mime_type = 'image/jpeg';
+        }
+
+        return response($plant->plantType->standard_image)->header('Content-Type', $mime_type);
+    }
 }
