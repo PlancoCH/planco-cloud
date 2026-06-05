@@ -14,15 +14,15 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->group(function () {
     Route::post('/signup', [UserController::class, 'signup']);
     Route::post('/login', [UserController::class, 'login']);
+    Route::post('/email/verification-notification', [VerifyEmailController::class, 'resend'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [UserController::class, 'logout']);
         Route::get('/me', [UserController::class, 'me']);
         Route::put('/me', [UserController::class, 'update']);
         Route::patch('/me', [UserController::class, 'update']);
-        Route::post('/email/verification-notification', [VerifyEmailController::class, 'resend'])
-            ->middleware('throttle:6,1')
-            ->name('verification.send');
     });
 });
 
