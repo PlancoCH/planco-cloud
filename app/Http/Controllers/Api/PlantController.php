@@ -191,4 +191,27 @@ class PlantController extends Controller
 
         return response($plant->plantType->standard_image)->header('Content-Type', $mime_type);
     }
+
+    Public function updateImage(Request $request, Plant $plant)
+    {
+        if (!$request->user()->plants()->where('plants.id', $plant->id)->exists()) {
+            abort(403, 'Unauthorized access to this plant.');
+        }
+
+        if (!$request->hasFile('image')) {
+            return response()->json(['message' => 'No image file provided.'], 400);
+        }
+
+        $file = $request->file('image');
+
+        if (!$file->isValid()) {
+            return response()->json(['message' => 'Invalid image file.'], 400);
+        }
+
+        $imageData = file_get_contents($file->getRealPath());
+
+        $plant->update(['custom_image' => $imageData]);
+
+        return response()->json(['message' => 'Plant image updated successfully.']);
+    }
 }
