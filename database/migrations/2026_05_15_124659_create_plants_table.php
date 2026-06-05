@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('plants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('plant_type_id')->constrained()->nullOnDelete();
+            $table->foreignId('plant_type_id')->nullable()->constrained()->nullOnDelete();
             $table->binary('custom_image')->nullable();
             $table->string('nickname');
             $table->text('notes')->nullable();
