@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Auth\ResendVerificationRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
@@ -35,13 +36,19 @@ class VerifyEmailController extends Controller
     /**
      * Resend the email verification notification.
      */
-    public function resend(Request $request): JsonResponse
+    public function resend(ResendVerificationRequest $request): JsonResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
+        $user = User::where('email', $request->email)->first();
+
+        if (! $user) {
+            return response()->json(['message' => 'Verification link sent.']);
+        }
+
+        if ($user->hasVerifiedEmail()) {
             return response()->json(['message' => 'Email already verified.'], 400);
         }
 
-        $request->user()->sendEmailVerificationNotification();
+        $user->sendEmailVerificationNotification();
 
         return response()->json(['message' => 'Verification link sent.']);
     }
