@@ -192,25 +192,33 @@ class PlantController extends Controller
         return response($plant->plantType->standard_image)->header('Content-Type', $mime_type);
     }
 
-    Public function updateImage(Request $request, Plant $plant)
+    public function updateImage(Request $request, Plant $plant)
     {
         if (!$request->user()->plants()->where('plants.id', $plant->id)->exists()) {
             abort(403, 'Unauthorized access to this plant.');
         }
 
-        if (!$request->hasFile('image')) {
-            return response()->json(['message' => 'No image file provided.'], 400);
+        $imageData = $request->getContent();
+
+        if (empty($imageData)) {
+            return response()->json(['message' => 'No image data provided in request body.'], 400);
         }
 
-        $file = $request->file('image');
-
-        if (!$file->isValid()) {
-            return response()->json(['message' => 'Invalid image file.'], 400);
+        if (strlen($imageData) > 1_073_741_824) {
+            return response()->json(['message' => 'Image exceeds maximum size of 1 GB.'], 400);
         }
 
-        $imageData = file_get_contents($file->getRealPath());
+        $image = @imagecreatefromstring($imageData);
+        if (!$image) {
+            return response()->json(['message' => 'Invalid or unsupported image format.'], 400);
+        }
 
-        $plant->update(['custom_image' => $imageData]);
+        ob_start();
+        imagejpeg($image, null, 85);
+        $jpeg = ob_get_clean();
+        imagedestroy($image);
+
+        $plant->update(['custom_image' => $jpeg]);
 
         return response()->json(['message' => 'Plant image updated successfully.']);
     }
