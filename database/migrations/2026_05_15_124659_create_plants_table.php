@@ -20,6 +20,8 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
         });
+
+        DB::statement('ALTER TABLE plants MODIFY custom_image LONGBLOB');
     }
 
     /**

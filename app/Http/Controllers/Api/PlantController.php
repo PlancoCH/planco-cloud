@@ -163,4 +163,63 @@ class PlantController extends Controller
 
         return new PlantResource($plant);
     }
+
+    public function image(Plant $plant)
+    {
+        if ($plant->custom_image) {
+
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mime_type = $finfo->buffer($plant->custom_image);
+
+            if (!$mime_type || $mime_type === 'application/x-empty') {
+                $mime_type = 'image/jpeg';
+            }
+
+            return response($plant->custom_image)->header('Content-Type', $mime_type);
+        }
+
+        if (!$plant->plantType->standard_image) {
+            abort(404, 'No image found for this plant.');
+        }
+
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mime_type = $finfo->buffer($plant->plantType->standard_image);
+
+        if (!$mime_type || $mime_type === 'application/x-empty') {
+            $mime_type = 'image/jpeg';
+        }
+
+        return response($plant->plantType->standard_image)->header('Content-Type', $mime_type);
+    }
+
+    public function updateImage(Request $request, Plant $plant)
+    {
+        if (!$request->user()->plants()->where('plants.id', $plant->id)->exists()) {
+            abort(403, 'Unauthorized access to this plant.');
+        }
+
+        $imageData = $request->getContent();
+
+        if (empty($imageData)) {
+            return response()->json(['message' => 'No image data provided in request body.'], 400);
+        }
+
+        if (strlen($imageData) > 1_073_741_824) {
+            return response()->json(['message' => 'Image exceeds maximum size of 1 GB.'], 400);
+        }
+
+        $image = @imagecreatefromstring($imageData);
+        if (!$image) {
+            return response()->json(['message' => 'Invalid or unsupported image format.'], 400);
+        }
+
+        ob_start();
+        imagejpeg($image, null, 85);
+        $jpeg = ob_get_clean();
+        imagedestroy($image);
+
+        $plant->update(['custom_image' => $jpeg]);
+
+        return response()->json(['message' => 'Plant image updated successfully.']);
+    }
 }
