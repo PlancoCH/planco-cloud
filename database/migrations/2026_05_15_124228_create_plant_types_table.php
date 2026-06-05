@@ -23,6 +23,8 @@ return new class extends Migration
             $table->float('ideal_humidity');
             $table->timestamps();
         });
+
+        DB::statement('ALTER TABLE plant_types MODIFY standard_image LONGBLOB');
     }
 
     /**
