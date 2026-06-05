@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\ResendVerificationRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -14,23 +15,35 @@ class VerifyEmailController extends Controller
     /**
      * Mark the authenticated user's email address as verified.
      */
-    public function verify(Request $request, $id, $hash): JsonResponse
+    public function verify(Request $request, $id, $hash): View
     {
         $user = User::findOrFail($id);
 
         if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-            return response()->json(['message' => 'Invalid verification link.'], 403);
+            return view('auth.verify-email', [
+                'title' => 'Invalid Link',
+                'message' => 'This verification link is invalid or has expired.',
+                'success' => false,
+            ]);
         }
 
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email already verified.'], 200);
+            return view('auth.verify-email', [
+                'title' => 'Already Verified',
+                'message' => 'Your email address has already been verified.',
+                'success' => true,
+            ]);
         }
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
 
-        return response()->json(['message' => 'Email verified successfully.'], 200);
+        return view('auth.verify-email', [
+            'title' => 'Email Verified',
+            'message' => 'Your email address has been verified successfully.',
+            'success' => true,
+        ]);
     }
 
     /**
