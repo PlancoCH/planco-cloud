@@ -41,7 +41,7 @@ class PlantDataObserver
 
             if (!$hasInsight) {
                 // Dispatch job to generate insight using OpenAI (avoid blocking the device request)
-                GenerateDailyInsight::dispatch($plantData->plant);
+                GenerateDailyInsight::dispatchSync($plantData->plant);
             }
         }
     }
