@@ -79,10 +79,3 @@ class GenerateDailyInsight implements ShouldQueue
         ]);
     }
 }
-     * Execute the job.
-     */
-    public function handle(): void
-    {
-        //
-    }
-}
