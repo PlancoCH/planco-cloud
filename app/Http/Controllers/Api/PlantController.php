@@ -43,13 +43,15 @@ class PlantController extends Controller
      */
     public function show(Request $request, Plant $plant)
     {
-        if (!$request->user()->plants()->where('plants.id', $plant->id)->exists()) {
+        $userPlant = $request->user()->plants()->where('plants.id', $plant->id)->first();
+
+        if (!$userPlant) {
             abort(403, 'Unauthorized access to this plant.');
         }
 
-        $plant->load(['plantType', 'device']);
+        $userPlant->load(['plantType', 'device']);
 
-        return new PlantResource($plant);
+        return new PlantResource($userPlant);
     }
 
     /**
