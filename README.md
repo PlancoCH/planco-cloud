@@ -4,7 +4,7 @@
 | Metadata | Information |
 | --- | --- |
 | **Organization** | Planco |
-| **Project Status** | 🔴 Alpha |
+| **Project Status** | 🟢 Production |
 | **Primary Owner** | @TobiasClausen |
 | **Primary Tech Stack** | Laravel, Postgres |
 | **CI/CD Status** | NOT SETUP |
