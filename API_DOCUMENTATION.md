@@ -21,9 +21,10 @@ Device API endpoints use a custom `VerifyDeviceApiKey` middleware and require an
 3. [Device Endpoints](#device-endpoints)
 4. [Plant Type Endpoints](#plant-type-endpoints)
 5. [Plant Endpoints](#plant-endpoints)
-6. [Daily Insight Endpoints](#daily-insight-endpoints)
-7. [Plant Data Endpoints](#plant-data-endpoints)
-8. [Device API Endpoints](#device-api-endpoints)
+6. [Plant Image Endpoints](#plant-image-endpoints)
+7. [Daily Insight Endpoints](#daily-insight-endpoints)
+8. [Plant Data Endpoints](#plant-data-endpoints)
+9. [Device API Endpoints](#device-api-endpoints)
 
 ---
 
@@ -175,13 +176,18 @@ Update the authenticated user's profile (alias for PUT).
 ---
 
 ### POST /auth/email/verification-notification
-Resend the email verification notification.
+Resend the email verification notification. To prevent email enumeration, the endpoint returns the same success message even if the provided email does not exist in the system.
 
-**Authentication:** Required
+**Authentication:** Not required
 
 **Rate Limit:** 6 requests per minute
 
-**Request Body:** Empty
+**Request Body:**
+```json
+{
+  "email": "string (required, email, max: 255)"
+}
+```
 
 **Response (200 OK):**
 ```json
@@ -200,7 +206,9 @@ Resend the email verification notification.
 ### GET /email/verify/{id}/{hash}
 Verify the user's email address using the verification link sent to their email.
 
-**Authentication:** Not required
+**Note:** This endpoint returns an HTML web page (not JSON). It is intended to be opened in a browser via the verification link sent by email.
+
+**Authentication:** Not required (validated via signed URL)
 
 **Rate Limit:** 6 requests per minute
 
@@ -210,16 +218,10 @@ Verify the user's email address using the verification link sent to their email.
 
 **Request Body:** Empty
 
-**Response (200 OK):**
-```json
-{
-  "message": "Email verified successfully."
-}
-```
-
-**Possible Errors:**
-- 403: Invalid verification link
-- 200: Email already verified
+**Response (200 OK):** An HTML page with one of the following states:
+- **Success:** "Your email address has been verified successfully."
+- **Already Verified:** "Your email address has already been verified."
+- **Invalid Link:** "This verification link is invalid or has expired."
 
 ---
 
@@ -647,30 +649,7 @@ Update a plant's information.
   "custom_image": "string | null",
   "sharing_token": "string | null",
   "created_at": "timestamp",
-  "updated_at": "timestamp",
-  "plant_type": {
-    "id": "integer",
-    "common_name": "string",
-    "description": "string | null",
-    "scientific_name": "string",
-    "ideal_temp": "numeric | null",
-    "ideal_moisture": "numeric | null",
-    "ideal_light_lux": "numeric | null",
-    "ideal_humidity": "numeric | null",
-    "created_at": "timestamp",
-    "updated_at": "timestamp"
-  },
-  "device": {
-    "id": "integer",
-    "name": "string",
-    "notes": "string | null",
-    "polling_rate": "integer",
-    "wifi_rssi": "integer | null",
-    "led_enabled": "boolean",
-    "created_at": "timestamp",
-    "updated_at": "timestamp"
-  },
-  "role": "owner | member"
+  "updated_at": "timestamp"
 }
 ```
 
@@ -844,35 +823,56 @@ Join a plant using a sharing token.
   "custom_image": "string | null",
   "sharing_token": "string",
   "created_at": "timestamp",
-  "updated_at": "timestamp",
-  "plant_type": {
-    "id": "integer",
-    "common_name": "string",
-    "description": "string | null",
-    "scientific_name": "string",
-    "ideal_temp": "numeric | null",
-    "ideal_moisture": "numeric | null",
-    "ideal_light_lux": "numeric | null",
-    "ideal_humidity": "numeric | null",
-    "created_at": "timestamp",
-    "updated_at": "timestamp"
-  },
-  "device": {
-    "id": "integer",
-    "name": "string",
-    "notes": "string | null",
-    "polling_rate": "integer",
-    "wifi_rssi": "integer | null",
-    "led_enabled": "boolean",
-    "created_at": "timestamp",
-    "updated_at": "timestamp"
-  },
-  "role": "member"
+  "updated_at": "timestamp"
 }
 ```
 
 **Possible Errors:**
 - 409: User is already a member of this plant
+
+---
+
+### GET /plants/{plant}/image
+Get the image for a specific plant. Returns the plant's custom image if set, otherwise falls back to the plant type's standard image.
+
+**Authentication:** Required
+
+**URL Parameters:**
+- `plant`: Plant ID (integer)
+
+**Request Body:** Empty
+
+**Response (200 OK):** Binary image data (JPEG or other image format, Content-Type header set via MIME detection)
+
+**Possible Errors:**
+- 404: No image found for this plant
+
+---
+
+### POST /plants/{plant}/image
+Upload or update the custom image for a plant. The raw binary image data should be sent as the entire request body (not wrapped in JSON). The image is validated and re-encoded as JPEG at quality 85.
+
+**Authentication:** Required
+
+**URL Parameters:**
+- `plant`: Plant ID (integer)
+
+**Request Body:** Raw binary image data (not JSON). The entire request body should contain the image bytes.
+
+**Response (200 OK):**
+```json
+{
+  "message": "Plant image updated successfully."
+}
+```
+
+**Possible Errors:**
+- 400: No image data provided in request body
+- 400: Image exceeds maximum size of 1 GB
+- 400: Invalid or unsupported image format
+- 403: Unauthorized access to this plant
+
+**Size Limit:** 1 GB (1,073,741,824 bytes)
 
 ---
 
