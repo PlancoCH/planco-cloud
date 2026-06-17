@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\DeviceController;
 use App\Http\Controllers\Api\PlantController;
 use App\Http\Controllers\Api\PlantDataController;
 use App\Http\Controllers\Api\PlantTypeController;
+use App\Http\Controllers\Api\StatsController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VerifyEmailController;
 use App\Http\Middleware\VerifyDeviceApiKey;
@@ -63,6 +64,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/plants/{plant}/data', [PlantDataController::class, 'index']);
     Route::get('/plants/{plant}/data/{plantData}', [PlantDataController::class, 'show']);
+
+    Route::get('/stats', [StatsController::class, 'index']);
 });
 
 Route::middleware(VerifyDeviceApiKey::class)->prefix('device-api')->group(function () {
