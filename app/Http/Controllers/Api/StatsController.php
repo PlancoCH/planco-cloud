@@ -47,9 +47,9 @@ class StatsController extends Controller
             foreach ($latestScores as $score) {
                 if ($score === null) {
                     $healthDistribution['unknown']++;
-                } elseif ($score >= 7) {
+                } elseif ($score >= 70) {
                     $healthDistribution['good']++;
-                } elseif ($score >= 4) {
+                } elseif ($score >= 40) {
                     $healthDistribution['fair']++;
                 } else {
                     $healthDistribution['poor']++;
