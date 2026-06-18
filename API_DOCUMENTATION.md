@@ -24,7 +24,8 @@ Device API endpoints use a custom `VerifyDeviceApiKey` middleware and require an
 6. [Plant Image Endpoints](#plant-image-endpoints)
 7. [Daily Insight Endpoints](#daily-insight-endpoints)
 8. [Plant Data Endpoints](#plant-data-endpoints)
-9. [Device API Endpoints](#device-api-endpoints)
+9. [Stats Endpoint](#stats-endpoint)
+10. [Device API Endpoints](#device-api-endpoints)
 
 ---
 
@@ -1037,6 +1038,71 @@ Get a specific plant data entry.
 **Possible Errors:**
 - 403: Unauthorized access to this plant
 - 404: Data not found for this plant
+
+---
+
+## Stats Endpoint
+
+### GET /stats
+Get a dashboard overview with aggregated stats for the authenticated user.
+
+**Authentication:** Required
+
+**Request Body:** Empty
+
+**Response (200 OK):**
+```json
+{
+  "devices": {
+    "total": "integer",
+    "list": [
+      {
+        "id": "integer",
+        "name": "string",
+        "wifi_rssi": "integer | null",
+        "polling_rate": "integer",
+        "led_enabled": "boolean",
+        "online": "boolean",
+        "plant_count": "integer"
+      }
+    ]
+  },
+  "plants": {
+    "total": "integer",
+    "owned": "integer",
+    "member_of": "integer"
+  },
+  "health": {
+    "average_plant_score": "numeric | null",
+    "distribution": {
+      "good": "integer",
+      "fair": "integer",
+      "poor": "integer",
+      "unknown": "integer"
+    }
+  },
+  "unread_insights": "integer",
+  "recent_data": [
+    {
+      "id": "integer",
+      "plant_id": "integer",
+      "plant_nickname": "string",
+      "plant_score": "numeric | null",
+      "temperature": "numeric",
+      "humidity": "numeric",
+      "soil_moisture": "numeric",
+      "light_intensity": "numeric",
+      "recorded_at": "string"
+    }
+  ]
+}
+```
+
+**Health Distribution Score Ranges:**
+- `good`: plant_score >= 7
+- `fair`: plant_score >= 4 and < 7
+- `poor`: plant_score < 4
+- `unknown`: no plant_score data available yet
 
 ---
 
